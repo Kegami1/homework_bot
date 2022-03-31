@@ -40,8 +40,10 @@ def send_message(bot, message):
         bot.send_message(TELEGRAM_CHAT_ID, message)
     except telegram.TelegramError:
         logger.error('Сообщение не было отрпавлено, что-то пошло не так')
+        return False
     else:
         logger.info('Сообщение успешно отправлено')
+        return True
 
 
 def get_api_answer(current_timestamp):
@@ -109,16 +111,16 @@ def main():
             homework = check_response(response)
             if homework:
                 status = parse_status(homework[0])
-                send_message(bot, status)
-                last_error = ''
+                if send_message(bot, status) is True:
+                    last_error = ''
             current_timestamp = response.get('current_date')
             time.sleep(RETRY_TIME)
 
         except Exception as error:
             if last_error != error:
                 message = f'Сбой в работе программы: {error}'
-                send_message(bot, message)
-                last_error = error
+                if send_message(bot, message) is True:
+                    last_error = error
             time.sleep(RETRY_TIME)
 
 
