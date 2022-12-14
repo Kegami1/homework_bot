@@ -1,2 +1,3 @@
 # homework_bot
-python telegram bot
+
+Телеграм бот, который проверяет статус задания. 
